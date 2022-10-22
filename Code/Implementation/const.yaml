@@ -1,0 +1,36 @@
+name: voxelMorph-mse-match_hist-single
+data:
+  filePath_train: train.csv
+  filePath_val: val.csv
+  is_grey: false
+  swap: false # default: false fixed=he, moving:phh3, true: swapped
+  workers: 4
+hyperparameters:
+  learning_rate: 0.0001
+  global_batch_size: 1
+  image_dim: 832 # needs to be divisible by 16 Unet halfes dim to 1/16
+  grad_loss_weight: 0.1
+min_validation_period:
+  batches: 2220  # dualpatches dataset (11102 images)
+searcher:
+  name: single
+  metric: mse_loss
+  max_length:
+      batches: 11102 #files train:11102 val:2881
+  smaller_is_better: true
+entrypoint: model_def:VoxelMorphTrial
+bind_mounts:
+  - host_path:  path_to_host_data_mount
+    container_path:  path_to_container_data_mount
+    read_only: true
+checkpoint_policy: best
+checkpoint_storage:
+  save_experiment_best: 0
+  save_trial_best: 1
+  save_trial_latest: 1
+resources:
+  agent_label: cluster_name
+  slots_per_trial: 1
+  max_slots: 1
+reproducibility:
+  experiment_seed: 1602840284

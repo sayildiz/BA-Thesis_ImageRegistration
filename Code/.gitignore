@@ -1,0 +1,6 @@
+*.jpeg
+*.png
+*.gif
+cleanup
+state_dict*
+*.jpg
